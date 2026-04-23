@@ -40,16 +40,26 @@ export default function Dashboard() {
       alert("❌ Load failed");
     }
   };
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile state
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-[#F8FAFC]">
-      {/* SIDEBAR */}
+      {/* Mobile Top Bar */}
+      <div className="md:hidden flex items-center justify-between p-4 bg-[#1E293B] text-white">
+        <span className="font-bold">SaaS Contributions</span>
+        <button onClick={() => setIsSidebarOpen(true)} className="p-2 text-2xl">
+          ☰
+        </button>
+      </div>
+
       <Sidebar
         fundraisers={fundraisers}
         activeId={activeId}
         onSelect={setActiveId}
         onCreate={createFundraiser}
         onDelete={deleteFundraiser}
+        isOpen={isSidebarOpen} // Pass state
+        setIsOpen={setIsSidebarOpen} // Pass setter
       />
 
       {/* MAIN CONTENT */}
