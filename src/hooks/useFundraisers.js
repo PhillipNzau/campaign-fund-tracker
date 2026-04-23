@@ -37,7 +37,19 @@ export const useFundraisers = () => {
     });
   };
 
-  const parsedData = useMemo(() => parseData(active?.text || ""), [active?.text]);
+  // const parsedData = useMemo(() => parseData(active?.text || ""), [active?.text]);
+
+  // const editedData = useMemo(() => {
+  //   if (!active) return [];
+  //   return parsedData.map((item, i) => ({
+  //     Name: active.edits?.[i]?.Name ?? item.Name,
+  //     Amount: active.edits?.[i]?.Amount ?? item.Amount,
+  //   }));
+  // }, [parsedData, active]);
+  // Inside useFundraisers.js
+  const parsedData = useMemo(() => {
+    return parseData(active?.text || "");
+  }, [active?.text]); // <--- MUST HAVE THIS
 
   const editedData = useMemo(() => {
     if (!active) return [];
@@ -45,7 +57,7 @@ export const useFundraisers = () => {
       Name: active.edits?.[i]?.Name ?? item.Name,
       Amount: active.edits?.[i]?.Amount ?? item.Amount,
     }));
-  }, [parsedData, active]);
+  }, [parsedData, active?.edits]);
 
   const mergedData = useMemo(() => mergeData(editedData), [editedData]);
 

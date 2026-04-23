@@ -31,13 +31,37 @@ export default function Dashboard() {
     }
   };
 
+  // const handleLoad = async () => {
+  //   try {
+  //     const text = await loadFromSheets(active.name);
+  //     updateActive({ text });
+  //     console.log("====================================");
+  //     console.log(text);
+  //     console.log("====================================");
+  //     alert("✅ Data loaded");
+  //   } catch (err) {
+  //     alert("❌ Load failed");
+  //   }
+  // };
   const handleLoad = async () => {
     try {
-      const text = await loadFromSheets(active.name);
-      updateActive({ text });
-      alert("✅ Data loaded");
+      const newText = await loadFromSheets(active.name);
+
+      if (!newText) {
+        alert("No data found for this campaign name.");
+        return;
+      }
+
+      // Explicitly update the text AND reset edits
+      // to ensure the table reflects the imported data
+      updateActive({
+        text: newText,
+        edits: {},
+      });
+
+      alert("✅ Data loaded and parsed");
     } catch (err) {
-      alert("❌ Load failed");
+      alert("❌ Failed to load from Google Sheets");
     }
   };
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile state
@@ -83,23 +107,73 @@ export default function Dashboard() {
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={handleSync}
-                  className="bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-lg hover:bg-slate-50 transition shadow-sm font-medium flex items-center gap-2"
+                  className="bg-white border border-slate-200 text-slate-700 px-3 py-2 rounded-lg hover:bg-slate-50 transition shadow-sm font-medium flex items-center gap-2"
                 >
-                  🔄 Sync Sheets
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-cloud-check-icon lucide-cloud-check"
+                  >
+                    <path d="m17 15-5.5 5.5L9 18" />
+                    <path d="M5.516 16.07A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 3.501 7.327" />
+                  </svg>{" "}
+                  Sync Sheets
                 </button>
 
                 <button
                   onClick={handleLoad}
-                  className="bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-lg hover:bg-slate-50 transition shadow-sm font-medium flex items-center gap-2"
+                  className="bg-white border border-slate-200 text-slate-700 px-3 py-2 rounded-lg hover:bg-slate-50 transition shadow-sm font-medium flex items-center gap-2"
                 >
-                  📥 Import
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="19"
+                    height="19"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-folder-input-icon lucide-folder-input"
+                  >
+                    <path d="M2 9V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H20a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-1" />
+                    <path d="M2 13h10" />
+                    <path d="m9 16 3-3-3-3" />
+                  </svg>{" "}
+                  Import
                 </button>
 
                 <button
                   onClick={() => exportToExcel(viewData, active.name)}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition shadow-md font-medium flex items-center gap-2"
+                  className="bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition shadow-md font-medium flex items-center gap-2"
                 >
-                  📊 Export Excel
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="19"
+                    height="19"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-file-spreadsheet-icon lucide-file-spreadsheet"
+                  >
+                    <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
+                    <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+                    <path d="M8 13h2" />
+                    <path d="M14 13h2" />
+                    <path d="M8 17h2" />
+                    <path d="M14 17h2" />
+                  </svg>{" "}
+                  Export Excel
                 </button>
               </div>
             </header>
